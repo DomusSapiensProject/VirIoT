@@ -1,4 +1,4 @@
-# ThingVisor Domus
+# ThingVisor WearableHealth
 
 This ThingVisor creates a vThing whose data are medical measures from the Garmin International. It rappresent these type of data:
 - summaries (heart_rate)

@@ -1,4 +1,4 @@
-# ThingVisor Domus
+# ThingVisor HomeThermometer
 
 This ThingVisor creates a vThing whose data are medical measures from the Oregon Weather Stations. It rappresent these type of data:
 - Indoor temperature
