@@ -220,7 +220,7 @@ def create_entities(filtered_data, v_thing_type):
         return [entity]
 
 
-def create_sensors_empty_entities(emails,map_emails_rooms):
+def create_datatypes_empty_entities(emails,map_emails_rooms):
     for sensor in entity_types:
         entities = []
 
@@ -259,7 +259,7 @@ if __name__ == '__main__':
     common.create_datatypes_vthings(emails)
     common.create_patients_vthing(emails)
     common.create_sensors_vthing()
-    create_sensors_empty_entities(emails,map_emails_rooms)
+    create_datatypes_empty_entities(emails,map_emails_rooms)
     common.retrieve_latest_data_sensors(emails)
     print("All vthings initialized")
 

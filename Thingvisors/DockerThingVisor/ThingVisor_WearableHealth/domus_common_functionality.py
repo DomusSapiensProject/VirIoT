@@ -15,6 +15,7 @@ from context import Context
 from flask import Flask
 from flask import request
 import requests
+import copy
 
 # Mqtt settings
 tv_control_prefix = "TV"  # prefix name for controller communication topic
@@ -161,6 +162,12 @@ def update_meta_entity(emails_list, v_thing_type, query_timestamp):
 
 
 def publish_entities(entitiesList, topic, v_thing_ID):
+    # clear entities list, removing commands
+    entitiesList=copy.deepcopy(entitiesList)
+    for entity in entitiesList:
+        if 'commands' in entity:
+            del entity['commands']
+
     message = {"data": entitiesList, "meta": {"vThingID": v_thing_ID}}
     logging.debug("Publishing data with topic name: {} ,message dimension in B: {}\n\n".format(topic,len(json.dumps(message))))
     # #DEBUG
@@ -248,7 +255,7 @@ def context_latest_data(data_type, email, topic):
     contextMap = thingvisor.v_things[data_type]['context'].get_all()
     if len(email) > 0:
         for entity in contextMap:
-            if email == entity['id'].split(":")[-1]: #since the email is the last thing in the id -> urn:ngsi-ld:<tv>:<type>:<email>
+            if email == entity['id'].split(":")[4]: #since the email is the 4th thing in the id -> urn:ngsi-ld:<tv>:<type>:<email>
                 publish_entities([entity], topic, identifier)
                 return 1
         return 0 #which means it doesn't have any
