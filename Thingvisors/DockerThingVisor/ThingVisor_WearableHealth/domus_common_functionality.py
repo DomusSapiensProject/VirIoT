@@ -124,7 +124,7 @@ def get_map_emails_rooms():
     return map_emails_rooms
 
 def create_sensor_context_entity(sensor_data,last_id_value):
-    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensor:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensors:(last_id_value)
+    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensor:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensor:(last_id_value)
     entity['owner'] = {"type": 'Property', 'value': sensor_data['owner']}
     entity['email'] = {"type": 'Property', 'value': sensor_data['email']}
     entity['geoPosition'] = {"type": 'Property', 'value': sensor_data['geoPosition']}
@@ -216,8 +216,9 @@ def make_entities_list(data_type, data_measurements, query_timestamp = None, cmd
             "type": "Property",
             "value": "True" if query_timestamp == None else "False"
         }
-    meta_entity = update_meta_entity(emails_list, data_type, query_timestamp)
-    ngsi_LD_entity_list.append(meta_entity)
+    if data_type in entity_types:
+        meta_entity = update_meta_entity(emails_list, data_type, query_timestamp)
+        ngsi_LD_entity_list.append(meta_entity)
 
     if cmd_nuri == None: #not an actuation command, but latest data so we update the context
         thingvisor.v_things[identifier]['context'].update(ngsi_LD_entity_list)
@@ -256,7 +257,7 @@ def context_latest_data(data_type, email, topic):
         return len(contextMap)
 
 
-def create_patients_vthings(emails):
+def create_patients_vthing(emails):
     thing = 'patients'
     #v_things[v_thing_ID] = {"vThing": {"label": label, "id": v_thing_ID, "description": },
     #                         "topic": topic, "type": ,
@@ -277,12 +278,15 @@ def create_patients_vthings(emails):
     thingvisor.v_things[thing]['context'].update(entities)
     return
 
+def create_sensors_vthing():
+    thingvisor.initialize_vthing('sensors','sensors',"Few data about the sensors",[],v_thing_contexts)
+
 def create_patients_context_entities(emails):
     entities = []
 
     #setting the entity for each patient
     for email in emails:
-        id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":patients:" + email
+        id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":patient:" + email
         ngsiLdEntity = {
             '@context': v_thing_contexts,
             'id': id_LD,
@@ -303,15 +307,13 @@ def create_patients_context_entities(emails):
 def retrieve_latest_data_sensors(emails):
     try:
         token_oauth = get_token()
-        sensors = entity_types.copy()
-        sensors.remove('sensor')
-        for sensor in sensors:
+        for type in entity_types:
             params = {
-                "data_type": sensor
+                "data_type": type
             }
             r = send_query_to_backend(params, token_oauth)
             if r['data'] != None:
-                make_entities_list(sensor, r['data'])
+                make_entities_list(type, r['data'])
             time.sleep(0.25)
     except Exception as err:
         logging.debug('An error occured: {}'.format(err))
@@ -354,10 +356,7 @@ def retrievePatientsData():
 
 def create_datatypes_vthings(emails):
     for type in entity_types:
-        thing = str(type)
-        thingvisor.initialize_vthing(thing,type + "-meta",'Sensor which measures ' + str(type),['query'],v_thing_contexts)
-    
-    return
+        thingvisor.initialize_vthing(str(type),type + "-meta",'Sensor which measures ' + str(type),['query'],v_thing_contexts)
 
 
 def removeViriot(string):
@@ -372,22 +371,19 @@ def on_query(vThingID, cmd_entity, cmd_name, cmd_info):
         id_LD=cmd_entity['id']
         topic = removeViriot(cmd_info['cmd-nuri'])
 
-
         if vThingID in entity_types:
             if id_LD == "urn:ngsi-ld:" + thing_visor_ID + ":" + vThingID:
                 email = "" #this way it will get all the patients
                 data += retrievePatientMeasurement(cmd_info, vThingID, email, topic)
             elif len(id_LD.split(":")) > 4: #means we have at least the emails
-                email = id_LD.split(":")[-3] #mails are always third last
+                email = id_LD.split(":")[4] #mails are always 5h
                 data += retrievePatientMeasurement(cmd_info, vThingID, email, topic)
-
         elif vThingID == 'patients':
-            if id_LD == "urn:ngsi-ld:" + thing_visor_ID + ":patients": 
+            if id_LD == "urn:ngsi-ld:" + thing_visor_ID + ":" + vThingID: 
                 data = 1
                 retrievePatientsData()
-
-            elif id_LD.split(":")[-1] != 'patients':
-                email = id_LD.split(":")[-1]
+            elif len(id_LD.split(":")) == 5:
+                email = id_LD.split(":")[4]
                 for data_type in entity_types:
                     data += retrievePatientMeasurement(cmd_info, data_type, email, topic)
 
@@ -404,11 +400,13 @@ def initialize(_v_thing_contexts, _entity_types,_endpoint, _create_entities_func
     global entity_types
     global endpoint
     global create_entities_function
+    global data_endpoints
     v_thing_contexts=_v_thing_contexts
     entity_types=_entity_types
     endpoint=_endpoint
     create_entities_function=_create_entities_function
-
+    data_endpoints=_entity_types.copy()
+    data_endpoints.append('sensor')
 
 ## FLASK THREAD CLASS
 
@@ -433,8 +431,8 @@ class httpRxThread(Thread):
 @app.route('/<string:endpoint>', methods=['POST'])
 def recv_notify(endpoint):
     try:
-        if endpoint not in entity_types:
-            raise ValueError('Only accepted routes are ', entity_types)
+        if endpoint not in data_endpoints:
+            raise ValueError('Only accepted routes are ', data_endpoints)
         jres = request.get_json(force=True)
 
         
@@ -448,8 +446,8 @@ def recv_notify(endpoint):
 @app.route('/query', methods=['GET'])
 def send_get_message():
     try:
-        if request.args.get('data_type') not in entity_types:
-            raise ValueError('Only accepted data types are ', entity_types)
+        if request.args.get('data_type') not in data_endpoints:
+            raise ValueError('Only accepted data types are ', data_endpoints)
         params = {}
         params['data_type'] = request.args.get('data_type')
         params['email'] = request.args.get('email')
@@ -467,8 +465,8 @@ def send_get_message():
 @app.route('/getContext', methods=['GET'])
 def retrieve_context_data():
     try:
-        if request.args.get('data_type') not in entity_types:
-            raise ValueError('Only accepted data types are ', entity_types)
+        if request.args.get('data_type') not in data_endpoints:
+            raise ValueError('Only accepted data types are ', data_endpoints)
         identifier = request.args.get('data_type')
         contextMap = thingvisor.v_things[identifier]['context'].get_all()
         r = dict()

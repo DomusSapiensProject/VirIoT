@@ -58,7 +58,7 @@ v_thing_contexts = [
     #"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
 ]
 
-entity_types = ['heart_rate', 'pulse_ox', 'light_sleep', 'deep_sleep', 'rem_sleep', 'awake_periods', 'motion_intensity', 'sensor']
+entity_types = ['heart_rate', 'pulse_ox', 'light_sleep', 'deep_sleep', 'rem_sleep', 'awake_periods', 'motion_intensity']
 
 thing_visor_ID = os.environ["thingVisorID"]
 parameters = os.environ["params"]
@@ -223,8 +223,6 @@ def create_entities(filtered_data, v_thing_type):
 def create_sensors_empty_entities(emails,map_emails_rooms):
     for sensor in entity_types:
         entities = []
-        if sensor == "sensor":
-            continue
 
         #setting the entity for each patient
         for email in emails:
@@ -259,7 +257,8 @@ if __name__ == '__main__':
     emails = common.get_all_patients_emails()
     map_emails_rooms = common.get_map_emails_rooms()
     common.create_datatypes_vthings(emails)
-    common.create_patients_vthings(emails)
+    common.create_patients_vthing(emails)
+    common.create_sensors_vthing()
     create_sensors_empty_entities(emails,map_emails_rooms)
     common.retrieve_latest_data_sensors(emails)
     print("All vthings initialized")

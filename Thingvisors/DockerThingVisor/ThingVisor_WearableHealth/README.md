@@ -832,7 +832,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/sensor' \
 ```json
     {
         "@context": "https://gitlab.com/sferainnovazione/garminconnect/-/raw/staging/VirIoT_fork/Context/context.jsonld",
-        "id": "urn:ngsi-ld:clinica1-production-garmin:sensors:paziente14@sferainnovazione.it",
+        "id": "urn:ngsi-ld:clinica1-production-garmin:sensor:paziente14@sferainnovazione.it",
         "type": "sensor",
         "address": {
             "type": "Property",

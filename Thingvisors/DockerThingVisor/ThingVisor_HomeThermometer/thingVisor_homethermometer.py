@@ -58,7 +58,7 @@ v_thing_contexts = [
     #"https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"
 ]
 
-entity_types = ['home_humidity', 'home_temperature', 'sensor']
+entity_types = ['home_humidity', 'home_temperature']
 
 thing_visor_ID = os.environ["thingVisorID"]
 parameters = os.environ["params"]
@@ -145,8 +145,6 @@ def create_entities(filtered_data, v_thing_type):
 def create_datatypes_empty_entities(emails,map_emails_rooms):
     for type in entity_types:
         entities = []
-        if type == "sensor":
-            continue
 
         #setting the entity for each patient
         for el in map_emails_rooms:
@@ -196,7 +194,8 @@ if __name__ == '__main__':
     emails = common.get_all_patients_emails()
     map_emails_rooms = common.get_map_emails_rooms()
     common.create_datatypes_vthings(emails)
-    common.create_patients_vthings(emails)
+    common.create_patients_vthing(emails)
+    common.create_sensors_vthing()
     create_datatypes_empty_entities(emails,map_emails_rooms)
     common.retrieve_latest_data_sensors(emails)
     print("All vthings initialized")
