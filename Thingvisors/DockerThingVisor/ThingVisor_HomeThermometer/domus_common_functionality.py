@@ -124,7 +124,7 @@ def get_map_emails_rooms():
     return map_emails_rooms
 
 def create_sensor_context_entity(sensor_data,last_id_value):
-    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensor:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensor:(last_id_value)
+    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensors:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensors:(last_id_value)
     entity['owner'] = {"type": 'Property', 'value': sensor_data['owner']}
     entity['email'] = {"type": 'Property', 'value': sensor_data['email']}
     entity['geoPosition'] = {"type": 'Property', 'value': sensor_data['geoPosition']}
@@ -286,7 +286,7 @@ def create_patients_context_entities(emails):
 
     #setting the entity for each patient
     for email in emails:
-        id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":patient:" + email
+        id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":patients:" + email
         ngsiLdEntity = {
             '@context': v_thing_contexts,
             'id': id_LD,

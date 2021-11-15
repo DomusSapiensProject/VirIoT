@@ -120,7 +120,7 @@ def create_oregon_entity(raw_measurements, v_thing_type):
         entity['humidityPercentageOffsetMap'] = {'type': 'Property', 'value': refined_measurements['dataMap']}
     entity['room'] = {"type": 'Property', 'value': refined_measurements['room']}
     entity['isIndoor'] = {"type": 'Property', 'value': refined_measurements['location'] == "indoor"}
-    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensor:1"}
+    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensors:1"}
     return entity
 
 

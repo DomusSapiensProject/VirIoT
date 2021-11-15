@@ -141,7 +141,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_temperatu
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -248,7 +248,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_humidity'
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -301,7 +301,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/sensor' \
 ```json
     {
         "@context": "https://gitlab.com/sferainnovazione/garminconnect/-/raw/staging/VirIoT_fork/Context/context.jsonld",
-        "id": "urn:ngsi-ld:clinica1-production-oregon:sensor:F153DBEFB43A",
+        "id": "urn:ngsi-ld:clinica1-production-oregon:sensors:F153DBEFB43A",
         "type": "sensor",
         "address": {
             "type": "Property",

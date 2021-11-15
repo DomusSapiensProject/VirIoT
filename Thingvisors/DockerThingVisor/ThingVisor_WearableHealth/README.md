@@ -126,7 +126,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/heart_rate' \
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -213,7 +213,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/pulse_ox' \
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -368,7 +368,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -473,7 +473,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/deep_sleep' \
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -578,7 +578,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/rem_sleep' \
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -684,7 +684,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/light_sleep' \
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -791,7 +791,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/awake_periods'
         },
         "measuredBySensor": {
             "type": "Relationship",
-            "object": "urn:ngsi-ld:sensor:1"
+            "object": "urn:ngsi-ld:sensors:1"
         },
         "commands": {
             "type": "Property",
@@ -832,7 +832,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/sensor' \
 ```json
     {
         "@context": "https://gitlab.com/sferainnovazione/garminconnect/-/raw/staging/VirIoT_fork/Context/context.jsonld",
-        "id": "urn:ngsi-ld:clinica1-production-garmin:sensor:paziente14@sferainnovazione.it",
+        "id": "urn:ngsi-ld:clinica1-production-garmin:sensors:paziente14@sferainnovazione.it",
         "type": "sensor",
         "address": {
             "type": "Property",

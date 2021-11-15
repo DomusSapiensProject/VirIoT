@@ -136,7 +136,7 @@ def create_motion_intensity_entity(raw_measurements):
     entity['distanceInMeters'] = {'type': 'Property', 'value': refined_measurements['distanceInMeters']}
     entity['steps'] = {'type': 'Property', 'value': refined_measurements['steps']}
     entity['activityType'] = {'type': 'Property', 'value': refined_measurements['activityType']}
-    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensor:1"}
+    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensors:1"}
     return entity
 
 
@@ -196,7 +196,7 @@ def create_entity_from_measurements(raw_measurements, v_thing_type):
     entity[ map_prop_names[v_thing_type]['map_name'] ] = {"type": 'Property', 'value': refined_measurements[  map_prop_names[v_thing_type]['map_name'] ] }
     if v_thing_type not in ['heart_rate','pulse_ox']:
         entity[ map_prop_names[v_thing_type]['prop_name'] ] = {'type': 'Property', 'value': refined_measurements[ map_prop_names[v_thing_type]['prop_name'] ]} #sum of each measure
-    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensor:1"}
+    entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensors:1"}
     return entity
 
 def create_sensors_context_entities(sensors_data):
