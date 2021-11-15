@@ -124,17 +124,17 @@ def create_oregon_entity(raw_measurements, v_thing_type):
     return entity
 
 
-def create_sensor_entities(sensors_data):
+def create_sensors_context_entities(sensors_data):
     entities = []
     for sensor_data in sensors_data:
         last_id_value = sensor_data['mac_address'].replace(":","").upper()
-        entity=common.create_sensor_entity(sensor_data,last_id_value)
+        entity=common.create_sensor_context_entity(sensor_data,last_id_value)
         entities.append(entity)
     return entities
 
 def create_entities(filtered_data, v_thing_type):
     if v_thing_type == "sensor":
-        entities = create_sensor_entities(filtered_data)
+        entities = create_sensors_context_entities(filtered_data)
         return entities
     else:
         entity = {}
@@ -142,19 +142,19 @@ def create_entities(filtered_data, v_thing_type):
         return [entity]
 
 
-def create_sensors_empty_entities(emails,map_emails_rooms):
-    for sensor in entity_types:
+def create_datatypes_empty_entities(emails,map_emails_rooms):
+    for type in entity_types:
         entities = []
-        if sensor == "sensor":
+        if type == "sensor":
             continue
 
         #setting the entity for each patient
         for el in map_emails_rooms:
-            id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":" + sensor + ":" + el['email'] + ":" + el['room'] + ':'
+            id_LD = "urn:ngsi-ld:" + thing_visor_ID + ":" + type + ":" + el['email'] + ":" + el['room'] + ':'
             ngsiLdEntityIndoor = {
                 '@context': v_thing_contexts,
                 'id': id_LD + "indoor",
-                'type': sensor,
+                'type': type,
                 'email': {
                     'type': 'Property',
                     'value': el['email']
@@ -167,7 +167,7 @@ def create_sensors_empty_entities(emails,map_emails_rooms):
             ngsiLdEntityOutdoor = {
                 '@context': v_thing_contexts,
                 'id': id_LD + 'outdoor',
-                'type': sensor,
+                'type': type,
                 'email': {
                     'type': 'Property',
                     'value': el['email']
@@ -179,7 +179,7 @@ def create_sensors_empty_entities(emails,map_emails_rooms):
             }
             entities.append(ngsiLdEntityIndoor)
             entities.append(ngsiLdEntityOutdoor)
-        thingvisor.v_things[sensor]['context'].update(entities)
+        thingvisor.v_things[type]['context'].update(entities)
 
 
 def on_query(vThingID, cmd_entity, cmd_name, cmd_info):
@@ -195,9 +195,9 @@ if __name__ == '__main__':
     #creating all the vthings
     emails = common.get_all_patients_emails()
     map_emails_rooms = common.get_map_emails_rooms()
-    common.create_sensors_vthings(emails)
+    common.create_datatypes_vthings(emails)
     common.create_patients_vthings(emails)
-    create_sensors_empty_entities(emails,map_emails_rooms)
+    create_datatypes_empty_entities(emails,map_emails_rooms)
     common.retrieve_latest_data_sensors(emails)
     print("All vthings initialized")
 

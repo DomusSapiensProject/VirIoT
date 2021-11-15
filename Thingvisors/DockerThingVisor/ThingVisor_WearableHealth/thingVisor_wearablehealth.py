@@ -199,17 +199,17 @@ def create_entity_from_measurements(raw_measurements, v_thing_type):
     entity['measuredBySensor'] = {'type': 'Relationship', 'object': "urn:ngsi-ld:sensor:1"}
     return entity
 
-def create_sensor_entities(sensors_data):
+def create_sensors_context_entities(sensors_data):
     entities = []
     for sensor_data in sensors_data:
         last_id_value = sensor_data['email']
-        entity=common.create_sensor_entity(sensor_data,last_id_value)
+        entity=common.create_sensor_context_entity(sensor_data,last_id_value)
         entities.append(entity)
     return entities
 
 def create_entities(filtered_data, v_thing_type):
     if v_thing_type == "sensor":
-        entities = create_sensor_entities(filtered_data)
+        entities = create_sensors_context_entities(filtered_data)
         return entities
     else:
         entity = {}
@@ -258,7 +258,7 @@ if __name__ == '__main__':
     #creating all the vthings
     emails = common.get_all_patients_emails()
     map_emails_rooms = common.get_map_emails_rooms()
-    common.create_sensors_vthings(emails)
+    common.create_datatypes_vthings(emails)
     common.create_patients_vthings(emails)
     create_sensors_empty_entities(emails,map_emails_rooms)
     common.retrieve_latest_data_sensors(emails)

@@ -123,8 +123,8 @@ def get_map_emails_rooms():
     logging.debug("Retrieved this map email-room: {}".format(map_emails_rooms))
     return map_emails_rooms
 
-def create_sensor_entity(sensor_data,last_id_value):
-    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensors:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensors:(last_id_value)
+def create_sensor_context_entity(sensor_data,last_id_value):
+    entity = {"@context": v_thing_contexts, "id": "urn:ngsi-ld:{}:sensor:{}".format(thing_visor_ID, last_id_value),"type": "sensor"} #urn:ngsi-ld:tv-name:sensors:(last_id_value)
     entity['owner'] = {"type": 'Property', 'value': sensor_data['owner']}
     entity['email'] = {"type": 'Property', 'value': sensor_data['email']}
     entity['geoPosition'] = {"type": 'Property', 'value': sensor_data['geoPosition']}
@@ -263,9 +263,6 @@ def create_patients_vthings(emails):
     #                         "dataType": 'patients', "thing": thing}
 
     thingvisor.initialize_vthing(thing,'patients',"Few data about the patients",['query'],v_thing_contexts)
-    thingvisor.initialize_vthing("a",'patients',"Few data about the patients",['query'],v_thing_contexts)
-    thingvisor.initialize_vthing("b",'patients',"Few data about the patients",['query'],["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"])
-    thingvisor.initialize_vthing("c",'patients',"Few data about the patients",['query'])
 
     thingvisor.publish_attributes_of_a_vthing(thing,
                 [{
@@ -276,11 +273,11 @@ def create_patients_vthings(emails):
                 "attributevalue" : len(emails)
                 }])
 
-    entities = create_patients_contexts_entities(emails)
+    entities = create_patients_context_entities(emails)
     thingvisor.v_things[thing]['context'].update(entities)
     return
 
-def create_patients_contexts_entities(emails):
+def create_patients_context_entities(emails):
     entities = []
 
     #setting the entity for each patient
@@ -355,10 +352,10 @@ def retrievePatientsData():
     return
 
 
-def create_sensors_vthings(emails):
-    for sensor in entity_types:
-        thing = str(sensor)
-        thingvisor.initialize_vthing(thing,sensor + "-meta",'Sensor which measures ' + str(sensor),['query'],v_thing_contexts)
+def create_datatypes_vthings(emails):
+    for type in entity_types:
+        thing = str(type)
+        thingvisor.initialize_vthing(thing,type + "-meta",'Sensor which measures ' + str(type),['query'],v_thing_contexts)
     
     return
 
