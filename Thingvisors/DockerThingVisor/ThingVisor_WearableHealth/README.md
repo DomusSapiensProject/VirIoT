@@ -23,7 +23,7 @@ The data can be sent by POST HTTP Requests in one of these eight endpoints:
 Docker can be used to build locally the image of the ThingVisor and then use it to deploy it.
 
 ```bash
-docker build -t domussapiens/domus-tv VirIoT/Thingvisors/DockerThingVisor/ThingVisor_Domus/
+docker build -t domussapiens/wearablehealth-tv VirIoT/Thingvisors/DockerThingVisor/ThingVisor_WearableHealth/
 ```
 
 ### Local Docker deployment
@@ -32,7 +32,7 @@ Use the VirIoT CLI and run the following command to run the ThingVisor example.
 PS: If you want to be able to use the actuation with this thingvisor you have to set the backendUri (hostname only), backendPort (either 80 or 443 or anything), username (admin user with access to the DB) and password (of the admin user) of your backend. 
 
 ```bash
-python3 f4i.py add-thingvisor -i domussapiens/domus-tv -n wearable-health-tv -d "domus thingvisor" -p '{"backendUri": "####", "backendPort": "##", "username": "####", "password": "####"}'
+python3 f4i.py add-thingvisor -i domussapiens/wearable-health-tv -n wearable-health-tv -d "Wearable Health thingvisor" -p '{"backendUri": "####", "backendPort": "##", "username": "####", "password": "####"}'
 ```
 
 ### Kubernetes deployment
@@ -41,17 +41,8 @@ Use the VirIoT CLI and run the following command to run the ThingVisor example.
 PS: If you want to be able to use the actuation with this thingvisor you have to set the backendUri (hostname only), backendPort (either 80 or 443 or anything), username (admin user with access to the DB) and password (of the admin user) of your backend. 
 
 ```bash
-python3 f4i.py add-thingvisor -c http://[k8s_node_ip]:[NodePort] -y "../yaml/thingVisor-homethermometer.yaml" -n wearable-health-tv -p '{"backendUri": "####", "backendPort": "##", "username": "###", "password": "###"}'
+python3 f4i.py add-thingvisor -c http://[k8s_node_ip]:[NodePort] -y "../yaml/thingVisor-wearablehealth.yaml" -n wearable-health-tv -p '{"backendUri": "####", "backendPort": "##", "username": "###", "password": "###"}'
 ```
-
-### N2N Support
-
-We have allowed the thingvisor to connect through a dedicated N2N network. To allow the thingvisor to use the N2N network you have to set the following five pairs of key:value inside the "params":
-- n2n_ip -> Which is an IPv4 static address
-- community_domus -> The community name
-- domuskey -> The password of the community
-- supernode_ip -> IPv4 of the supernode
-- supernode_port -> Exposed port of the supernode
 
 ## NGSI-LD data model
  
@@ -254,7 +245,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
     },
     {
         "summary_id":"x314c08b-5d6ee698-6aa16",
-        "startTimeInSeconds":"1569963000",
+        "startTimeInSeconds":"1569963900",
         "durationInSeconds":"29340",
         "timestamp": 1571470200,
         "email": "paziente4@sferainnovazione.it",
@@ -280,28 +271,24 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
             "value": {
                 "0": "SEDENTARY",
                 "900": "SEDENTARY",
-                ...
                 "27000": "SEDENTARY",
                 "27900": "SEDENTARY"
             }
         },
         "createdAtTimestamp": {
             "type": "Property",
-            "value": 1636703928
+            "value": 1571470200
         },
         "distanceInMeters": {
             "type": "Property",
             "value": {
-                "0": 0,
-                "900": 0,
-                ...
-                "27000": 0,
-                "27900": 0
+                "0": 3,
+                "900": 1
             }
         },
         "durationInSeconds": {
             "type": "Property",
-            "value": 26880
+            "value": 29340
         },
         "email": {
             "type": "Property",
@@ -311,10 +298,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
             "type": "Property",
             "value": {
                 "0": "SEDENTARY",
-                "900": "SEDENTARY",
-                ...
-                "27000": "SEDENTARY",
-                "27900": "SEDENTARY"
+                "900": "SEDENTARY"
             }
         },
         "isLatest": {
@@ -325,41 +309,29 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
             "type": "Property",
             "value": {
                 "0": 3,
-                "900": 3,
-                "1800": 0,
-                ...
-                "27000": 2,
-                "27900": 3
+                "900": 2
             }
         },
         "meanMotionIntensity": {
             "type": "Property",
             "value": {
-                "0": 0,
-                "900": 0,
-                "1800": 0,
-                ...
-                "27000": 0,
-                "27900": 0
+                "0": 1,
+                "900": 1
             }
         },
         "queryDate": {
             "type": "Property",
-            "value": 1636703928
+            "value": 1571470200
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636677000
+            "value": 1571470200
         },
         "steps": {
             "type": "Property",
             "value": {
                 "0": 0,
-                "900": 0,
-                "1800": 0,
-                ...
-                "27000": 0,
-                "27900": 0
+                "900": 0
             }
         },
         "userEmail": {
@@ -376,7 +348,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/motion_intensi
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636703880
+            "value": 1571500020
         },
         "generatedByVThing": {
             "type": "Property",
@@ -409,8 +381,8 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/deep_sleep' \
         "startTimeInSeconds": "1569622080",
         "durationInSeconds": "24360",
         "value": {
-            "endTimeInSeconds": 1569625620,
-            "startTimeInSeconds": 1569625440
+            "endTimeInSeconds": 1569625700,
+            "startTimeInSeconds": 1569625500
         },
         "deepSleepInSeconds": 3000,
         "email": "paziente2@sferainnovazione.it"
@@ -431,25 +403,24 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/deep_sleep' \
         },
         "deepSleepInSeconds": {
             "type": "Property",
-            "value": 4260
+            "value": 6000
         },
         "deepSleepMap": {
             "type": "Property",
             "value": [
                 {
-                    "startTimeInSeconds": 1636586220,
-                    "endTimeInSeconds": 1636587120
+                    "startTimeInSeconds": 1569622560,
+                    "endTimeInSeconds": 1569625380
                 },
-                ...
                 {
-                    "startTimeInSeconds": 1636681740,
-                    "endTimeInSeconds": 1636682040
+                    "startTimeInSeconds": 1569625500,
+                    "endTimeInSeconds": 1569625700
                 }
             ]
         },
         "durationInSeconds": {
             "type": "Property",
-            "value": 118620
+            "value": 6000
         },
         "email": {
             "type": "Property",
@@ -465,7 +436,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/deep_sleep' \
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636584180
+            "value": 1569622560
         },
         "userEmail": {
             "type": "Property",
@@ -481,7 +452,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/deep_sleep' \
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636702800
+            "value": 1569625700
         },
         "generatedByVThing": {
             "type": "Property",
@@ -514,8 +485,8 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/rem_sleep' \
         "startTimeInSeconds": "1569622080",
         "durationInSeconds": "24360",
         "value": {
-            "endTimeInSeconds": 1569625620,
-            "startTimeInSeconds": 1569625440
+            "endTimeInSeconds": 1569625700,
+            "startTimeInSeconds": 1569625500
         },
         "remSleepInSeconds": 3000,
         "email": "paziente2@sferainnovazione.it"
@@ -532,11 +503,28 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/rem_sleep' \
         "type": "rem_sleep",
         "createdAtTimestamp": {
             "type": "Property",
-            "value": 1636703926
+            "value": 1636703925
+        },
+        "remSleepInSeconds": {
+            "type": "Property",
+            "value": 6000
+        },
+        "remSleepMap": {
+            "type": "Property",
+            "value": [
+                {
+                    "startTimeInSeconds": 1569622560,
+                    "endTimeInSeconds": 1569625380
+                },
+                {
+                    "startTimeInSeconds": 1569625500,
+                    "endTimeInSeconds": 1569625700
+                }
+            ]
         },
         "durationInSeconds": {
             "type": "Property",
-            "value": 118620
+            "value": 6000
         },
         "email": {
             "type": "Property",
@@ -548,29 +536,11 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/rem_sleep' \
         },
         "queryDate": {
             "type": "Property",
-            "value": 1636703926
-        },
-        "remSleepInSeconds": {
-            "type": "Property",
-            "value": 12600
-        },
-        "remSleepMap": {
-            "type": "Property",
-            "value": [
-                {
-                    "startTimeInSeconds": 1636594740,
-                    "endTimeInSeconds": 1636595160
-                },
-                ...
-                {
-                    "startTimeInSeconds": 1636702020,
-                    "endTimeInSeconds": 1636702860
-                }
-            ]
+            "value": 1636703925
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636584180
+            "value": 1569622560
         },
         "userEmail": {
             "type": "Property",
@@ -586,7 +556,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/rem_sleep' \
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636702800
+            "value": 1569625700
         },
         "generatedByVThing": {
             "type": "Property",
@@ -620,8 +590,8 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/light_sleep' \
         "startTimeInSeconds": "1569622080",
         "durationInSeconds": "24360",
         "value": {
-            "endTimeInSeconds": 1569625620,
-            "startTimeInSeconds": 1569625440
+            "endTimeInSeconds": 1569625700,
+            "startTimeInSeconds": 1569625500
         },
         "lightSleepInSeconds": 3000,
         "email": "paziente2@sferainnovazione.it"
@@ -640,9 +610,26 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/light_sleep' \
             "type": "Property",
             "value": 1636703925
         },
+        "lightSleepInSeconds": {
+            "type": "Property",
+            "value": 6000
+        },
+        "lightSleepMap": {
+            "type": "Property",
+            "value": [
+                {
+                    "startTimeInSeconds": 1569622560,
+                    "endTimeInSeconds": 1569625380
+                },
+                {
+                    "startTimeInSeconds": 1569625500,
+                    "endTimeInSeconds": 1569625700
+                }
+            ]
+        },
         "durationInSeconds": {
             "type": "Property",
-            "value": 118620
+            "value": 6000
         },
         "email": {
             "type": "Property",
@@ -652,31 +639,13 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/light_sleep' \
             "type": "Property",
             "value": "True"
         },
-        "lightSleepInSeconds": {
-            "type": "Property",
-            "value": 49200
-        },
-        "lightSleepMap": {
-            "type": "Property",
-            "value": [
-                {
-                    "startTimeInSeconds": 1636584180,
-                    "endTimeInSeconds": 1636586220
-                },
-                ...
-                {
-                    "startTimeInSeconds": 1636701360,
-                    "endTimeInSeconds": 1636702020
-                }
-            ]
-        },
         "queryDate": {
             "type": "Property",
             "value": 1636703925
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636584180
+            "value": 1569622560
         },
         "userEmail": {
             "type": "Property",
@@ -692,7 +661,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/light_sleep' \
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636702800
+            "value": 1569625700
         },
         "generatedByVThing": {
             "type": "Property",
@@ -727,8 +696,8 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/awake_periods'
         "startTimeInSeconds": "1569622080",
         "durationInSeconds": "24360",
         "value": {
-            "endTimeInSeconds": 1569625620,
-            "startTimeInSeconds": 1569625440
+            "endTimeInSeconds": 1569625700,
+            "startTimeInSeconds": 1569625500
         },
         "awakeInSeconds": 3000,
         "email": "paziente2@sferainnovazione.it"
@@ -743,31 +712,30 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/awake_periods'
         "@context": "https://gitlab.com/sferainnovazione/garminconnect/-/raw/staging/VirIoT_fork/Context/context.jsonld",
         "id": "urn:ngsi-ld:clinica1-production-garmin:awake_periods:paziente14@sferainnovazione.it",
         "type": "awake_periods",
+        "createdAtTimestamp": {
+            "type": "Property",
+            "value": 1636703925
+        },
         "awakeInSeconds": {
             "type": "Property",
-            "value": 120
+            "value": 6000
         },
         "awakeMap": {
             "type": "Property",
             "value": [
                 {
-                    "startTimeInSeconds": 1636594680,
-                    "endTimeInSeconds": 1636594740
+                    "startTimeInSeconds": 1569622560,
+                    "endTimeInSeconds": 1569625380
                 },
-                ...
                 {
-                    "startTimeInSeconds": 1636691340,
-                    "endTimeInSeconds": 1636691400
+                    "startTimeInSeconds": 1569625500,
+                    "endTimeInSeconds": 1569625700
                 }
             ]
         },
-        "createdAtTimestamp": {
-            "type": "Property",
-            "value": 1636703926
-        },
         "durationInSeconds": {
             "type": "Property",
-            "value": 118620
+            "value": 6000
         },
         "email": {
             "type": "Property",
@@ -779,11 +747,11 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/awake_periods'
         },
         "queryDate": {
             "type": "Property",
-            "value": 1636703926
+            "value": 1636703925
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636584180
+            "value": 1569622560
         },
         "userEmail": {
             "type": "Property",
@@ -799,7 +767,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/awake_periods'
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636702800
+            "value": 1569625700
         },
         "generatedByVThing": {
             "type": "Property",

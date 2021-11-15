@@ -1,6 +1,6 @@
 # ThingVisor HomeThermometer
 
-This ThingVisor creates a vThing whose data are medical measures from the Oregon Weather Stations. It rappresent these type of data:
+This ThingVisor creates vThings whose data can be collected by Oregon Scientific Weather Stations. It can represent these type of data:
 - Indoor temperature
 - Outdoor temperature
 - Indoor humidity
@@ -17,7 +17,7 @@ The data can be sent by POST HTTP Requests in one of these three endpoints:
 Docker can be used to build locally the image of the ThingVisor and then use it to deploy it.
 
 ```bash
-docker build -t domussapiens/domus-tv VirIoT/Thingvisors/DockerThingVisor/ThingVisor_Domus/
+docker build -t domussapiens/homethermometer-tv VirIoT/Thingvisors/DockerThingVisor/ThingVisor_HomeThermometer/
 ```
 
 ### Local Docker deployment
@@ -26,7 +26,7 @@ Use the VirIoT CLI and run the following command to run the ThingVisor example.
 PS: If you want to be able to use the actuation with this thingvisor you have to set the backendUri (hostname only), backendPort (either 80 or 443 or anything), username (admin user with access to the DB) and password (of the admin user) of your backend. 
 
 ```bash
-python3 f4i.py add-thingvisor -i domussapiens/domus-tv -n home-thermometer-tv -d "domus thingvisor" -p '{"backendUri": "####", "backendPort": "##", "username": "####", "password": "####"}'
+python3 f4i.py add-thingvisor -i domussapiens/homethermometer-tv -n home-thermometer-tv -d "HomeThermometer thingvisor" -p '{"backendUri": "####", "backendPort": "##", "username": "####", "password": "####"}'
 ```
 
 ### Kubernetes deployment
@@ -37,15 +37,6 @@ PS: If you want to be able to use the actuation with this thingvisor you have to
 ```bash
 python3 f4i.py add-thingvisor -c http://[k8s_node_ip]:[NodePort] -y "../yaml/thingVisor-homethermometer.yaml" -n home-thermometer-tv -p '{"backendUri": "####", "backendPort": "##", "username": "###", "password": "###"}'
 ```
-
-### N2N Support
-
-We have allowed the thingvisor to connect through a dedicated N2N network. To allow the thingvisor to use the N2N network you have to set the following five pairs of key:value inside the "params":
-- n2n_ip -> Which is an IPv4 static address
-- community_domus -> The community name
-- domuskey -> The password of the community
-- supernode_ip -> IPv4 of the supernode
-- supernode_port -> Exposed port of the supernode
 
 
 
@@ -107,7 +98,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_temperatu
         },
         "frequencyInSeconds": {
             "type": "Property",
-            "value": 300
+            "value": 60
         },
         "isIndoor": {
             "type": "Property",
@@ -127,12 +118,13 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_temperatu
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636705967
+            "value": 123456700
         },
         "temperatureCelsiusOffsetMap": {
             "type": "Property",
             "value": {
-                "0": 22.9
+                "0": 23,
+                "60": 22
             }
         },
         "userEmail": {
@@ -149,7 +141,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_temperatu
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636706267
+            "value": 123456760
         },
         "generatedByVThing": {
             "type": "Property",
@@ -214,7 +206,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_humidity'
         },
         "frequencyInSeconds": {
             "type": "Property",
-            "value": 300
+            "value": 60
         },
         "isIndoor": {
             "type": "Property",
@@ -234,12 +226,13 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_humidity'
         },
         "startTimeInSeconds": {
             "type": "Property",
-            "value": 1636705967
+            "value": 123456700
         },
         "temperatureCelsiusOffsetMap": {
             "type": "Property",
             "value": {
-                "0": 54.4
+                "0": 50,
+                "60": 45
             }
         },
         "userEmail": {
@@ -256,7 +249,7 @@ curl --location --request POST '<ip_thingvisor>:<port_thingvisor>/home_humidity'
         },
         "endTimeInSeconds": {
             "type": "Property",
-            "value": 1636706267
+            "value": 123456760
         },
         "generatedByVThing": {
             "type": "Property",
